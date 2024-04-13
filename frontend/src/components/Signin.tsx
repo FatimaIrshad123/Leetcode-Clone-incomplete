@@ -1,5 +1,6 @@
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import { useState } from "react";
+import { app } from "../utils/firebase";
 
 const actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
@@ -11,7 +12,7 @@ const actionCodeSettings = {
 
 
 export default function Signin(){
-    const auth = getAuth();
+    const auth = getAuth(app);
     const [email, setEmail] = useState('')
     async function onSignin() {
        await sendSignInLinkToEmail(auth, email, actionCodeSettings)
