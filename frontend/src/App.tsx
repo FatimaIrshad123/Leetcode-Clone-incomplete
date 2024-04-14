@@ -9,7 +9,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { userAtom } from './store/atoms/user';
 import { Topbar } from './components/Topbar';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import About from './components/About';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCijoVcwkeJe4niBkBd8n07Fe1JhQfxu0E",
@@ -28,12 +29,17 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-<RecoilRoot>
-      <Topbar />
-      <StoreApp />
-
-    </RecoilRoot>
-    </BrowserRouter>
+        <Topbar />
+        <Routes>
+          <Route element={<About />} path='/about'/>
+          <Route element={<div>
+              <RecoilRoot>
+                <StoreApp />
+              </RecoilRoot>
+            </div>} path='/'/>
+        </Routes>
+      </BrowserRouter>
+      
     </div>
   )
     
