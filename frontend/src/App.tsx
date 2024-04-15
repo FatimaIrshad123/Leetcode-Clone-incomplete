@@ -11,6 +11,8 @@ import { userAtom } from './store/atoms/user';
 import { Topbar } from './components/Topbar';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import About from './components/About';
+import SubmissionActivity from './components/SubmissionActivity';
+import { SubmissionActivityList } from './components/SubmissionActivityList';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCijoVcwkeJe4niBkBd8n07Fe1JhQfxu0E",
@@ -37,9 +39,9 @@ function App() {
                 <StoreApp />
               </RecoilRoot>
             </div>} path='/'/>
+            <Route element={<SubmissionActivityList/>} path='/activity'/>
         </Routes>
       </BrowserRouter>
-      
     </div>
   )
     
