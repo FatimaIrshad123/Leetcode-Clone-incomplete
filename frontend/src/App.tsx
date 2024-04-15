@@ -14,6 +14,7 @@ import About from './components/About';
 import SubmissionActivity from './components/SubmissionActivity';
 import { SubmissionActivityList } from './components/SubmissionActivityList';
 import Activity from './components/Activity';
+import Problem from './components/Problem';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCijoVcwkeJe4niBkBd8n07Fe1JhQfxu0E",
@@ -41,6 +42,7 @@ function App() {
               </RecoilRoot>
             </div>} path='/'/>
             <Route element={<Activity/>} path='/activity'/>
+            <Route element={<Problem/>} path='/problems'/>
         </Routes>
       </BrowserRouter>
     </div>
