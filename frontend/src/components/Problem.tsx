@@ -1,7 +1,7 @@
 
 export default function Problem(){
     return (
-        <div className="bg-gray-100 pb-5 rounded-lg">
+        <div className="bg-gray-100 pb-5 rounded-lg max-w-screen-lg">
             <h1 className="text-4xl text-left py-5 bg-white">All Problems</h1>
             <div className="flex font-bold p-3 rounded w-screen">
                 <h2 className="pr-20">Id</h2>
