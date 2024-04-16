@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.connect('mongodb+srv://Fatima:Fatima@cluster0.7bunznc.mongodb.net/LeetCode-Clone')
+mongoose.connect(process.env.MONGO_URL!)
 
 const problemSchema = new mongoose.Schema({
     defaultCode: {
