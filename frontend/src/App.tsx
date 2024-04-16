@@ -1,18 +1,13 @@
 import { useEffect } from 'react';
 import './App.css'
-import Landing from './components/Landing'
 import Signin from './components/Signin';
-
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { userAtom } from './store/atoms/user';
 import { Topbar } from './components/Topbar';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import About from './components/About';
-import SubmissionActivity from './components/SubmissionActivity';
-import { SubmissionActivityList } from './components/SubmissionActivityList';
 import Activity from './components/Activity';
 import Problem from './components/Problem';
 
