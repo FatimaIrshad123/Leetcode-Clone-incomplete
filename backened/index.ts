@@ -3,6 +3,8 @@ const admin = require('firebase-admin');
 const { initializeApp } = require('firebase-admin/app')
 const {getFirestore} = require('firebase-admin/firestore')
 const serviceAccount = require('../../leetcode-clone-9205a-firebase-adminsdk-rpmf3-c93c3a871d.json');
+const cors = require('cors')
+
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -12,6 +14,8 @@ admin.initializeApp({
 
 const db = getFirestore();
 const app = express()
+
+app.use(cors())
 
 app.get('/', async(req,res) => {
     const limit = 5
