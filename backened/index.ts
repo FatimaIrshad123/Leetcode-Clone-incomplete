@@ -4,7 +4,6 @@ const { initializeApp } = require('firebase-admin/app')
 const {getFirestore} = require('firebase-admin/firestore')
 const serviceAccount = require('../../leetcode-clone-9205a-firebase-adminsdk-rpmf3-c93c3a871d.json');
 
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://leetcode-clone-9205a.firebaseio.com',
@@ -16,16 +15,13 @@ const app = express()
 
 app.get('/', async(req,res) => {
     const limit = 5
-    //const limit = req.body.limit || 10;
-    const res1 = await db.collection("submissions").limit(limit).orderBy('submitTime','desc').get()
-    const submissions : string[] = [];
-    
-   // console.log(res1.docs)
-    res1.docs.forEach(doc => {
-        //console.log(doc.data())
+    const response = await db.collection("submissions").limit(limit).orderBy('submitTime','desc').get()
+    let submissions : string[] = [];
+    response.docs.forEach(doc => {
         submissions.push(doc.data())
     })
-    res.json(res1)
+    console.log(submissions)
+    res.json(response)
 })
 
 app.listen(3000, () => {console.log('Running on port 3000')})
