@@ -1,3 +1,5 @@
+import { resolve } from "chart.js/helpers";
+
 const express = require('express')
 const admin = require('firebase-admin');
 const { initializeApp } = require('firebase-admin/app')
@@ -20,12 +22,19 @@ app.use(cors())
 app.get('/', async(req,res) => {
     const limit = 5
     const response = await db.collection("submissions").limit(limit).orderBy('submitTime','desc').get()
-    let submissions : string[] = [];
+    let submissions :any = [];
     response.docs.forEach(doc => {
-        submissions.push(doc.data())
-    })
+        submissions.push(new Promise(async (resolve) =>{
+            //console.log(doc.data().user)
+            const snapshot = await doc.data().user.get()
+            resolve ({
+                submissions: doc.data(),
+                user: snapshot.data()
+            })
+        }))
+      })
     console.log(submissions)
-    res.json(response)
+    res.json({response: await Promise.all(submissions)})
 })
 
 app.listen(3000, () => {console.log('Running on port 3000')})
