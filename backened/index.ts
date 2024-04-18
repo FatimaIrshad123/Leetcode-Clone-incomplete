@@ -1,5 +1,4 @@
-import { resolve } from "chart.js/helpers";
-
+const SUPPORTED_LANGUAGES = require('./utils.ts')
 const express = require('express')
 const admin = require('firebase-admin');
 const { initializeApp } = require('firebase-admin/app')
@@ -18,8 +17,9 @@ const db = getFirestore();
 const app = express()
 
 app.use(cors())
+app.use(express.json())
 
-app.get('/', async(req,res) => {
+app.get('/data', async(req,res) => {
     const limit = 5
     const response = await db.collection("submissions").limit(limit).orderBy('submitTime','desc').get()
     let submissions :any = [];
@@ -33,59 +33,37 @@ app.get('/', async(req,res) => {
             })
         }))
       })
-    console.log(submissions)
+    //console.log(submissions)
     res.json({response: await Promise.all(submissions)})
 })
 
 app.listen(3000, () => {console.log('Running on port 3000')})
-/*export const getSubmissions = onRequest({ cors: true }, async (request, response) => {
-    // const offset = request.body.offset;
-    const limit = request.body.limit || 10;
-    const res = await db.collection("submissions").limit(limit).orderBy("submitTime", "desc").get();
-    const submissions = [];
-    console.log("res.docs")
-    console.log(res.docs.length)
-    res.docs.forEach(async doc => {
-        console.log("doc1");
-        submissions.push(new Promise(async (resolve) => {
-                console.log(doc.data().user)
-                const snapshot = await doc.data().user.get();
-                resolve({
-                    submission: doc.data(),
-                    user: snapshot.data()
-                })
-        }))
-    })
 
-    response.send({
-        response: await Promise.all(submissions)
-    })
-})
-
-export const submit = onCall(async (request) => {
-    const uid = request.auth.uid;
-    const language = request.data.language;
-    const submission = request.data.submission;
-    const problemId = request.data.problemId;
+app.post('/',async (req,res) => {
+    const uid = req.body.auth.uid;
+    const language = req.body.data.language;
+    const submission = req.body.data.submission;
+    const problemId = req.body.data.problemId;
 
     if (!uid) {
-        return {
+        console.log('hi')
+        res.json( {
             message: "Unauthorized"
-        }
+        })
     }
 
     if (!SUPPORTED_LANGUAGES.includes(language)) {
-        return {
+        res.status(403).json({
             message: "Language not supported"
-        }
+        })
     }
 
     const problem = await db.collection("problems").doc(problemId?.toString()).get();
-
+console.log(problem)
     if (!problem.exists) {
-        return {
+        res.status(403).json( {
             message: "Problem Doesnt exist"
-        }
+        })
     }
 
     const doc = await db.collection("submissions").add({
@@ -98,8 +76,8 @@ export const submit = onCall(async (request) => {
         status: "PENDING"
     })
 
-    return {
+    res.json( {
         message: "Submission done",
         id: doc.id
-    }
-})*/
+    })
+})

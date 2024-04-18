@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,7 +34,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+var _this = this;
+var SUPPORTED_LANGUAGES = require('./utils.ts');
 var express = require('express');
 var admin = require('firebase-admin');
 var initializeApp = require('firebase-admin/app').initializeApp;
@@ -50,9 +50,11 @@ admin.initializeApp({
 var db = getFirestore();
 var app = express();
 app.use(cors());
-app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.use(express.json());
+app.get('/data', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var limit, response, submissions, _a, _b;
     var _c;
+    var _this = this;
     return __generator(this, function (_d) {
         switch (_d.label) {
             case 0:
@@ -62,7 +64,7 @@ app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 response = _d.sent();
                 submissions = [];
                 response.docs.forEach(function (doc) {
-                    submissions.push(new Promise(function (resolve) { return __awaiter(void 0, void 0, void 0, function () {
+                    submissions.push(new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
                         var snapshot;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
@@ -78,79 +80,63 @@ app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, func
                         });
                     }); }));
                 });
-                console.log(submissions);
+                //console.log(submissions)
                 _b = (_a = res).json;
                 _c = {};
                 return [4 /*yield*/, Promise.all(submissions)];
             case 2:
+                //console.log(submissions)
                 _b.apply(_a, [(_c.response = _d.sent(), _c)]);
                 return [2 /*return*/];
         }
     });
 }); });
 app.listen(3000, function () { console.log('Running on port 3000'); });
-/*export const getSubmissions = onRequest({ cors: true }, async (request, response) => {
-    // const offset = request.body.offset;
-    const limit = request.body.limit || 10;
-    const res = await db.collection("submissions").limit(limit).orderBy("submitTime", "desc").get();
-    const submissions = [];
-    console.log("res.docs")
-    console.log(res.docs.length)
-    res.docs.forEach(async doc => {
-        console.log("doc1");
-        submissions.push(new Promise(async (resolve) => {
-                console.log(doc.data().user)
-                const snapshot = await doc.data().user.get();
-                resolve({
-                    submission: doc.data(),
-                    user: snapshot.data()
-                })
-        }))
-    })
-
-    response.send({
-        response: await Promise.all(submissions)
-    })
-})
-
-export const submit = onCall(async (request) => {
-    const uid = request.auth.uid;
-    const language = request.data.language;
-    const submission = request.data.submission;
-    const problemId = request.data.problemId;
-
-    if (!uid) {
-        return {
-            message: "Unauthorized"
+app.post('/', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var uid, language, submission, problemId, problem, doc;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                uid = req.body.auth.uid;
+                language = req.body.data.language;
+                submission = req.body.data.submission;
+                problemId = req.body.data.problemId;
+                if (!uid) {
+                    console.log('hi');
+                    res.json({
+                        message: "Unauthorized"
+                    });
+                }
+                if (!SUPPORTED_LANGUAGES.includes(language)) {
+                    res.status(403).json({
+                        message: "Language not supported"
+                    });
+                }
+                return [4 /*yield*/, db.collection("problems").doc(problemId === null || problemId === void 0 ? void 0 : problemId.toString()).get()];
+            case 1:
+                problem = _a.sent();
+                console.log(problem);
+                if (!problem.exists) {
+                    res.status(403).json({
+                        message: "Problem Doesnt exist"
+                    });
+                }
+                return [4 /*yield*/, db.collection("submissions").add({
+                        language: language,
+                        submission: submission,
+                        problemId: problemId,
+                        userId: uid,
+                        submitTime: new Date(),
+                        workerTryCount: 0,
+                        status: "PENDING"
+                    })];
+            case 2:
+                doc = _a.sent();
+                res.json({
+                    message: "Submission done",
+                    id: doc.id
+                });
+                return [2 /*return*/];
         }
-    }
-
-    if (!SUPPORTED_LANGUAGES.includes(language)) {
-        return {
-            message: "Language not supported"
-        }
-    }
-
-    const problem = await db.collection("problems").doc(problemId?.toString()).get();
-
-    if (!problem.exists) {
-        return {
-            message: "Problem Doesnt exist"
-        }
-    }
-
-    const doc = await db.collection("submissions").add({
-        language,
-        submission,
-        problemId,
-        userId: uid,
-        submitTime: new Date(),
-        workerTryCount: 0,
-        status: "PENDING"
-    })
-
-    return {
-        message: "Submission done",
-        id: doc.id
-    }
-})*/ 
+    });
+}); });
