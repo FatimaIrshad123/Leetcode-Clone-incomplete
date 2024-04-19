@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import About from './components/About';
 import Activity from './components/Activity';
 import Problem from './components/Problem';
+import { Leaderboard } from './components/LeaderBoard';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCijoVcwkeJe4niBkBd8n07Fe1JhQfxu0E",
@@ -38,6 +39,7 @@ function App() {
             </div>} path='/'/>
             <Route element={<Activity/>} path='/activity'/>
             <Route element={<Problem/>} path='/problems'/>
+            <Route element={<Leaderboard/>} path='/leaderboard'/>
         </Routes>
       </BrowserRouter>
     </div>
