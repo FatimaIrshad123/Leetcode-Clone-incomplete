@@ -47,13 +47,13 @@ app.post('/',async (req,res) => {
 
     if (!uid) {
         console.log('hi')
-        res.json( {
+        return res.json( {
             message: "Unauthorized"
         })
     }
 
     if (!SUPPORTED_LANGUAGES.includes(language)) {
-        res.status(403).json({
+        return res.status(403).json({
             message: "Language not supported"
         })
     }
@@ -61,7 +61,7 @@ app.post('/',async (req,res) => {
     const problem = await db.collection("problems").doc(problemId?.toString()).get();
 console.log(problem)
     if (!problem.exists) {
-        res.status(403).json( {
+        return res.status(403).json( {
             message: "Problem Doesnt exist"
         })
     }

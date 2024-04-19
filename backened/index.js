@@ -103,23 +103,23 @@ app.post('/', function (req, res) { return __awaiter(_this, void 0, void 0, func
                 problemId = req.body.data.problemId;
                 if (!uid) {
                     console.log('hi');
-                    res.json({
-                        message: "Unauthorized"
-                    });
+                    return [2 /*return*/, res.json({
+                            message: "Unauthorized"
+                        })];
                 }
                 if (!SUPPORTED_LANGUAGES.includes(language)) {
-                    res.status(403).json({
-                        message: "Language not supported"
-                    });
+                    return [2 /*return*/, res.status(403).json({
+                            message: "Language not supported"
+                        })];
                 }
                 return [4 /*yield*/, db.collection("problems").doc(problemId === null || problemId === void 0 ? void 0 : problemId.toString()).get()];
             case 1:
                 problem = _a.sent();
                 console.log(problem);
                 if (!problem.exists) {
-                    res.status(403).json({
-                        message: "Problem Doesnt exist"
-                    });
+                    return [2 /*return*/, res.status(403).json({
+                            message: "Problem Doesnt exist"
+                        })];
                 }
                 return [4 /*yield*/, db.collection("submissions").add({
                         language: language,
