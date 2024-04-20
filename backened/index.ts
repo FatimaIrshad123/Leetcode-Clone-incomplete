@@ -23,13 +23,14 @@ app.get('/data', async(req,res) => {
     const limit = 5
     const response = await db.collection("submissions").limit(limit).orderBy('submitTime','desc').get()
     let submissions :any = [];
+    //console.log(response.docs)
     response.docs.forEach(doc => {
         submissions.push(new Promise(async (resolve) =>{
-            //console.log(doc.data().user)
-            const snapshot = await doc.data().user.get()
+            console.log(doc.data())
+            const snapshot = await doc.data()
             resolve ({
                 submissions: doc.data(),
-                user: snapshot.data()
+                user: await doc.data()
             })
         }))
       })

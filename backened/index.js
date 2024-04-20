@@ -63,18 +63,26 @@ app.get('/data', function (req, res) { return __awaiter(_this, void 0, void 0, f
             case 1:
                 response = _d.sent();
                 submissions = [];
+                //console.log(response.docs)
                 response.docs.forEach(function (doc) {
                     submissions.push(new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
-                        var snapshot;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, doc.data().user.get()];
+                        var snapshot, _a;
+                        var _b;
+                        return __generator(this, function (_c) {
+                            switch (_c.label) {
+                                case 0:
+                                    console.log(doc.data());
+                                    return [4 /*yield*/, doc.data()];
                                 case 1:
-                                    snapshot = _a.sent();
-                                    resolve({
-                                        submissions: doc.data(),
-                                        user: snapshot.data()
-                                    });
+                                    snapshot = _c.sent();
+                                    _a = resolve;
+                                    _b = {
+                                        submissions: doc.data()
+                                    };
+                                    return [4 /*yield*/, doc.data()];
+                                case 2:
+                                    _a.apply(void 0, [(_b.user = _c.sent(),
+                                            _b)]);
                                     return [2 /*return*/];
                             }
                         });
