@@ -12,11 +12,12 @@ export const globalSubmissions = selector<Submission>({
    key: "globalSubmissions",
    get: async ({get}) => {
     const response = await axios.get('http://localhost:3000/data')
-    return response.data.response.map(x => ({
-        timestamp: x.submitTime._nanoseconds,
-        language: x.language,
-        submission: x.submission,
-        status: x.status
+   // console.log(response.data)
+    return response.data.response.map((x) => ({
+        timestamp: x.submissions.submitTime._nanoseconds,
+        language: x.submissions.language,
+        submission: x.submissions.submission,
+        status: x.submissions.status
     }))
    }
 })
